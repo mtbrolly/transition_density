@@ -130,3 +130,14 @@ GTGP_mll = np.array(GTGP_mll)
 MDN_mll = mdn_mean_log_likelihood(X0val, DXval,
                                   DT, 32,
                                   block_size=40000)
+
+
+# Evaluate DTMC with fixed resolution.
+
+res = 1.
+DTMC = grids.DTMC(n_x=int(np.ceil((region[0, 1] - region[0, 0]) / res)),
+                  n_y=int(np.ceil((region[1, 1] - region[1, 0]) / res)),
+                  xlims=region[0], ylims=region[1])
+DTMC.fit(X0, DX)
+DTMC_train = DTMC.mean_log_likelihood(X0, DX)
+DTMC_test = DTMC.mean_log_likelihood(X0val, DXval)
