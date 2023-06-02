@@ -106,7 +106,8 @@ class GTGP(LonlatGrid):
 
         # Record which bins displacements start from.
         self.count = np.bincount(
-            X0_bin, minlength=self.centres[..., 0].size)
+            X0_bin, minlength=self.centres[..., 0].size).reshape(
+                self.centres.shape[:-1])
         self.count_flat = np.reshape(self.count, self.count_flat.shape)
         self.X0_some = self.count != 0
 
@@ -117,7 +118,7 @@ class GTGP(LonlatGrid):
                 self.mean_flat[i, :] = self.global_mean
                 self.cov_flat[i, ...] = self.global_cov
             else:
-                self.mean_flat[i, :] = np.mean(DX[X0_ind])
+                self.mean_flat[i, :] = np.mean(DX[X0_ind], axis=0)
                 self.cov_flat[i, ...] = np.cov(DX[X0_ind], rowvar=False)
 
         self.mean = self.mean_flat.reshape(self.mean.shape, order='F')
